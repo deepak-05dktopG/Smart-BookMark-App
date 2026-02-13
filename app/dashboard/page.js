@@ -516,12 +516,12 @@ export default function Dashboard() {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium text-white truncate text-base group-hover:text-neon-blue transition-colors">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <h3 className="flex-1 min-w-0 font-medium text-white text-base whitespace-normal break-words [overflow-wrap:anywhere] group-hover:text-neon-blue transition-colors">
                             {bookmark.title}
                           </h3>
                           {String(bookmark.id).startsWith("optimistic-") && (
-                            <span className="text-[10px] uppercase tracking-wider font-bold text-neon-blue/70 animate-pulse">
+                            <span className="shrink-0 text-[10px] uppercase tracking-wider font-bold text-neon-blue/70 animate-pulse">
                               Syncing
                             </span>
                           )}
@@ -530,7 +530,7 @@ export default function Dashboard() {
                           href={bookmark.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-white/40 truncate block hover:text-white/60 transition-colors"
+                          className="text-sm text-white/40 block whitespace-normal break-all [overflow-wrap:anywhere] hover:text-white/60 transition-colors"
                         >
                           {bookmark.url}
                         </a>

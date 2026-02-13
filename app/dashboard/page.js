@@ -461,10 +461,10 @@ export default function Dashboard() {
           >
             <div className="flex items-center justify-between mb-4 px-2">
               <h2 className="text-lg font-medium text-white/90">Saved Links ({bookmarks.length})</h2>
-              <div className="flex gap-2 text-white/40">
+              {/* <div className="flex gap-2 text-white/40">
                 <LayoutGrid size={18} className="cursor-pointer hover:text-white transition-colors" />
                 <List size={18} className="cursor-pointer hover:text-white transition-colors text-neon-blue" />
-              </div>
+              </div> */}
             </div>
 
             {loading ? (

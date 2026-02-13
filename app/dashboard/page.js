@@ -332,6 +332,17 @@ export default function Dashboard() {
     router.push("/");
   };
 
+  const formatBookmarkDate = (value) => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    return new Intl.DateTimeFormat(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    }).format(date);
+  };
+
   const filteredBookmarks = bookmarks.filter(b =>
     b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     b.url.toLowerCase().includes(searchQuery.toLowerCase())
@@ -523,6 +534,11 @@ export default function Dashboard() {
                         >
                           {bookmark.url}
                         </a>
+                        {formatBookmarkDate(bookmark.created_at) && (
+                          <div className="mt-1 text-xs text-white/30">
+                            Saved {formatBookmarkDate(bookmark.created_at)}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">

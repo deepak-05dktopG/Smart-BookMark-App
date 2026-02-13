@@ -386,7 +386,7 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        <div className="grid gap-8 lg:grid-cols-12">
+        <div className="grid gap-6 lg:gap-8 lg:grid-cols-12">
 
           {/* Add Bookmark - Sidebar */}
           <motion.div
@@ -525,19 +525,19 @@ export default function Dashboard() {
                         </a>
                       </div>
 
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 sm:gap-2">
                         <a
                           href={bookmark.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors"
                           title="Open Link"
                         >
                           <ExternalLink size={18} />
                         </a>
                         <button
                           onClick={() => handleDeleteBookmark(bookmark.id)}
-                          className="p-2 rounded-lg hover:bg-red-500/20 text-white/70 hover:text-red-400 transition-colors"
+                          className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-colors"
                           title="Delete"
                         >
                           <Trash2 size={18} />

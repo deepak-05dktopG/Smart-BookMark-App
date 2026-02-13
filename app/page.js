@@ -63,7 +63,7 @@ export default function Home() {
               <span className="font-mono tracking-wide">NEXT-GEN BOOKMARKING</span>
             </motion.div>
 
-            <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-white leading-tight">
+            <h1 className="text-4xl sm:text-7xl font-bold tracking-tight text-white leading-tight">
               The <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple neon-text">Future</span> of <br />
               Web Organization
             </h1>

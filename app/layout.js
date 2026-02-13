@@ -20,9 +20,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh] relative`}
       >
-        <div className="h-[100dvh] flex flex-col">
+        <div className="bg-mesh" />
+        <div className="h-[100dvh] flex flex-col relative z-10">
           <main className="flex-1 overflow-y-auto">
             {children}
           </main>

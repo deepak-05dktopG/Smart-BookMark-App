@@ -2,6 +2,8 @@
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Trash2, ExternalLink, Search, LogOut, LayoutGrid, List } from "lucide-react";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -11,6 +13,7 @@ export default function Dashboard() {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [adding, setAdding] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const broadcastRef = useRef(null);
   const tabIdRef = useRef(null);
 
@@ -243,8 +246,6 @@ export default function Dashboard() {
       client_mutation_id: mutationId,
     };
 
-    // Keep the UI feeling instant; data integrity is handled by Supabase.
-
     // Optimistic UI update so the bookmark shows instantly.
     setBookmarks((current) => [optimisticBookmark, ...current]);
     postBroadcast({
@@ -331,164 +332,226 @@ export default function Dashboard() {
     router.push("/");
   };
 
+  const filteredBookmarks = bookmarks.filter(b =>
+    b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    b.url.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading && !user) {
     return (
-      <div className="min-h-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900">
-        <div className="mx-auto max-w-5xl px-4 py-12">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur">
-            <p className="text-white/80">Loading your dashboard…</p>
-          </div>
-        </div>
+      <div className="min-h-full flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-neon-blue/30 border-t-neon-blue rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900">
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:py-10">
+    <div className="min-h-full py-8 sm:py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
         {/* Top Bar */}
-        <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm backdrop-blur sm:p-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                My Bookmarks
-              </h1>
-              <p className="mt-1 text-sm text-white/60">
-                Signed in as: {user?.email}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/70 shadow-sm backdrop-blur">
-                {bookmarks.length} saved
-              </div>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center justify-center rounded-lg bg-red-500/90 px-4 py-2 text-sm font-medium text-white transition-colors transition-transform duration-200 hover:bg-red-500 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-slate-950"
-              >
-                Logout
-              </button>
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 glass-panel rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+              <span className="text-neon-blue">⚡</span> My Bookmarks
+            </h1>
+            <p className="mt-1 text-sm text-white/60">
+              Welcome back, <span className="text-white font-medium">{user?.email}</span>
+            </p>
           </div>
-        </div>
 
-        {/* Main */}
-        <div className="grid gap-6 lg:grid-cols-5">
-          {/* Add Bookmark */}
-          <div className="lg:col-span-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm backdrop-blur sm:p-6">
-              <h2 className="text-base font-semibold text-white">
-                New bookmark
-              </h2>
-              <p className="mt-1 text-sm text-white/60">
-                Add a title and URL to save it.
-              </p>
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-none">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full sm:w-64 bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-neon-blue/50 focus:ring-1 focus:ring-neon-blue/50 transition-all"
+              />
+            </div>
 
-              <form onSubmit={handleAddBookmark} className="mt-5 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-white/70">
-                    Title
-                  </label>
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+              title="Logout"
+            >
+              <LogOut size={20} />
+            </button>
+          </div>
+        </motion.div>
+
+        <div className="grid gap-8 lg:grid-cols-12">
+
+          {/* Add Bookmark - Sidebar */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-4"
+          >
+            <div className="glass-panel rounded-2xl p-6 sticky top-8">
+              <div className="flex items-center gap-2 mb-6 text-neon-purple">
+                <Plus size={20} />
+                <h2 className="font-semibold text-white">Add New Bookmark</h2>
+              </div>
+
+              <form onSubmit={handleAddBookmark} className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-white/70 uppercase tracking-wider">Title</label>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g., Project documentation"
-                    className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white shadow-sm placeholder:text-white/40 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    placeholder="e.g. Awesome Project"
+                    className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-neon-purple/50 focus:ring-1 focus:ring-neon-purple/50 transition-all"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-white/70">
-                    URL
-                  </label>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-white/70 uppercase tracking-wider">URL</label>
                   <input
                     type="url"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    placeholder="e.g., https://docs.example.com"
-                    className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-white shadow-sm placeholder:text-white/40 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    placeholder="https://example.com"
+                    className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-neon-purple/50 focus:ring-1 focus:ring-neon-purple/50 transition-all"
                     required
                   />
                 </div>
-                <button
-                  type="submit"
-                  disabled={adding}
-                  className="inline-flex w-full items-center justify-center rounded-lg bg-indigo-500/90 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors transition-transform duration-200 hover:bg-indigo-500 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-950"
-                >
-                  {adding ? "Saving…" : "Save bookmark"}
-                </button>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={adding}
+                    className="w-full relative group overflow-hidden rounded-xl bg-gradient-to-r from-neon-purple to-pink-600 px-6 py-3.5 font-medium text-white shadow-lg transition-all hover:shadow-neon-purple/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    <span className="relative flex items-center justify-center gap-2">
+                      {adding ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span>Saving...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Save Bookmark</span>
+                          <Plus size={18} />
+                        </>
+                      )}
+                    </span>
+                  </button>
+                </div>
               </form>
             </div>
-          </div>
+          </motion.div>
 
-          {/* List */}
-          <div className="lg:col-span-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm backdrop-blur sm:p-6">
-              <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-base font-semibold text-white">Saved</h2>
-                <p className="text-sm text-white/60">
-                  {bookmarks.length} total
-                </p>
+          {/* Bookmarks List */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lg:col-span-8"
+          >
+            <div className="flex items-center justify-between mb-4 px-2">
+              <h2 className="text-lg font-medium text-white/90">Saved Links ({bookmarks.length})</h2>
+              <div className="flex gap-2 text-white/40">
+                <LayoutGrid size={18} className="cursor-pointer hover:text-white transition-colors" />
+                <List size={18} className="cursor-pointer hover:text-white transition-colors text-neon-blue" />
               </div>
+            </div>
 
-              {loading ? (
-                <p className="text-white/70 text-center py-10">
-                  Loading bookmarks…
-                </p>
-              ) : bookmarks.length === 0 ? (
-                <div className="py-10 text-center">
-                  <p className="text-white font-medium">No bookmarks yet</p>
-                  <p className="mt-1 text-sm text-white/60">
-                    Create your first bookmark using the form.
-                  </p>
+            {loading ? (
+              <div className="text-center py-20 text-white/30 animate-pulse">
+                Loading your digital brain...
+              </div>
+            ) : bookmarks.length === 0 ? (
+              <div className="glass-panel rounded-2xl p-12 text-center border-dashed border-white/10">
+                <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center mb-4">
+                  <Search className="text-white/20" size={32} />
                 </div>
-              ) : (
-                <div className="mt-5 divide-y divide-white/10 rounded-xl border border-white/10 bg-white/5 backdrop-blur">
-                  {bookmarks.map((bookmark) => (
-                    <div
+                <h3 className="text-lg font-medium text-white mb-1">No bookmarks found</h3>
+                <p className="text-white/50 text-sm">Everything you save will appear here.</p>
+              </div>
+            ) : (
+              <motion.div className="space-y-3">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {filteredBookmarks.map((bookmark) => (
+                    <motion.div
                       key={bookmark.id}
-                      className="flex items-center justify-between gap-4 p-4 transition-colors transition-transform duration-200 hover:bg-white/5 hover:-translate-y-[1px]"
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className="glass-card group rounded-xl p-4 flex items-center gap-4"
+                      style={{ willChange: "transform, opacity" }}
                     >
-                      <div className="min-w-0">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:border-neon-blue/30 transition-colors">
+                        <img
+                          src={`https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}&sz=32`}
+                          onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block' }}
+                          alt=""
+                          className="w-5 h-5 opacity-80"
+                        />
+                        <span className="hidden text-xs font-bold text-white/40">
+                          {bookmark.title.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="truncate text-sm font-medium text-white">
+                          <h3 className="font-medium text-white truncate text-base group-hover:text-neon-blue transition-colors">
                             {bookmark.title}
                           </h3>
-                          {String(bookmark.id).startsWith("optimistic-") ? (
-                            <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/70 animate-pulse">
-                              Saving…
+                          {String(bookmark.id).startsWith("optimistic-") && (
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-neon-blue/70 animate-pulse">
+                              Syncing
                             </span>
-                          ) : null}
+                          )}
                         </div>
                         <a
                           href={bookmark.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-1 block truncate text-sm text-indigo-300 hover:underline"
+                          className="text-sm text-white/40 truncate block hover:text-white/60 transition-colors"
                         >
                           {bookmark.url}
                         </a>
-                        <p className="mt-1 text-xs text-white/50">
-                          {new Date(bookmark.created_at).toLocaleDateString()}
-                        </p>
                       </div>
 
-                      <button
-                        onClick={() => handleDeleteBookmark(bookmark.id)}
-                        className="inline-flex flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white/80 shadow-sm transition-colors transition-transform duration-200 hover:bg-white/10 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-950"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <a
+                          href={bookmark.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+                          title="Open Link"
+                        >
+                          <ExternalLink size={18} />
+                        </a>
+                        <button
+                          onClick={() => handleDeleteBookmark(bookmark.id)}
+                          className="p-2 rounded-lg hover:bg-red-500/20 text-white/70 hover:text-red-400 transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </motion.div>
                   ))}
-                </div>
-              )}
-            </div>
-          </div>
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </motion.div>
         </div>
       </div>
-
     </div>
   );
 }
+

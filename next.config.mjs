@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.google.com',
+        pathname: '/s2/favicons**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

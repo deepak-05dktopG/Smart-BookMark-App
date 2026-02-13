@@ -29,27 +29,27 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="min-h-full flex items-center justify-center">
+        <p className="text-white/70">Checking your session…</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 anim-fade-in">
+    <div className="min-h-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900">
       <div className="mx-auto max-w-5xl px-4 min-h-full flex items-center py-6 sm:py-10">
         <div className="w-full grid gap-6 sm:gap-8 lg:grid-cols-2 lg:items-center">
-          <div className="anim-fade-up">
+          <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-white/80 shadow-sm backdrop-blur">
               <span aria-hidden>🔖</span>
-              <span>Minimal, fast, synced</span>
+              <span>Fast, secure, synced</span>
             </div>
 
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Smart Bookmark App
+              Your Bookmark Hub
             </h1>
             <p className="mt-4 text-base leading-relaxed text-white/70 sm:text-lg">
-              Save links in seconds and keep them available everywhere you work.
+              Organize your favorite links with custom categories and instant search — everything you need, always at your fingertips.
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -75,59 +75,73 @@ export default function Home() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                <span>Continue with Google</span>
+                <span>Sign in with Google</span>
               </button>
 
               <p className="text-sm text-white/60">
-                Sign in to view and manage your bookmarks.
+                Access your bookmarks from any device.
               </p>
             </div>
 
             <div className="mt-6 grid grid-cols-3 gap-2 sm:mt-8 sm:gap-3">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm backdrop-blur anim-fade-up anim-delay-1">
-                <p className="text-xs font-medium text-white sm:text-sm">Instant</p>
-                <p className="mt-1 hidden text-sm text-white/70 sm:block">See changes live.</p>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm backdrop-blur">
+                <p className="text-xs font-medium text-white sm:text-sm">Organize</p>
+                <p className="mt-1 hidden text-sm text-white/70 sm:block">
+                  Custom categories.
+                </p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm backdrop-blur anim-fade-up anim-delay-2">
-                <p className="text-xs font-medium text-white sm:text-sm">Focused</p>
-                <p className="mt-1 hidden text-sm text-white/70 sm:block">No clutter, just links.</p>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm backdrop-blur">
+                <p className="text-xs font-medium text-white sm:text-sm">Search</p>
+                <p className="mt-1 hidden text-sm text-white/70 sm:block">
+                  Find links instantly.
+                </p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm backdrop-blur anim-fade-up anim-delay-3">
-                <p className="text-xs font-medium text-white sm:text-sm">Multi-tab</p>
-                <p className="mt-1 hidden text-sm text-white/70 sm:block">Updates across tabs.</p>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 shadow-sm backdrop-blur">
+                <p className="text-xs font-medium text-white sm:text-sm">Secure</p>
+                <p className="mt-1 hidden text-sm text-white/70 sm:block">
+                  Privacy-first storage.
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur sm:p-8 anim-fade-up anim-delay-2">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur sm:p-8">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur sm:p-5">
-              <p className="text-xs font-medium text-white/60">Preview</p>
+              <p className="text-xs font-medium text-white/60">Your Collections</p>
               <p className="mt-2 text-sm font-semibold text-white">
-                Your dashboard
+                Popular categories
               </p>
               <div className="mt-4 space-y-3">
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition-colors cursor-pointer">
                   <p className="text-sm font-medium text-white truncate">
-                    Docs
+                    Learning Resources
                   </p>
                   <p className="text-xs text-white/60 truncate">
-                    https://nextjs.org/docs
+                    Tutorials, courses & docs
                   </p>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition-colors cursor-pointer">
                   <p className="text-sm font-medium text-white truncate">
-                    Supabase
+                    Work Tools
                   </p>
                   <p className="text-xs text-white/60 truncate">
-                    https://supabase.com
+                    Productivity & collaboration
                   </p>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 ">
+                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition-colors cursor-pointer">
                   <p className="text-sm font-medium text-white truncate">
-                    Design inspo
+                    Social & News
                   </p>
                   <p className="text-xs text-white/60 truncate">
-                    https://dribbble.com
+                    Stay updated and connected
+                  </p>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition-colors cursor-pointer">
+                  <p className="text-sm font-medium text-white truncate">
+                    Projects
+                  </p>
+                  <p className="text-xs text-white/60 truncate">
+                    Track & organize by project
                   </p>
                 </div>
               </div>

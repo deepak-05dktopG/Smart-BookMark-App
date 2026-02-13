@@ -333,7 +333,7 @@ export default function Dashboard() {
 
   if (loading && !user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 anim-fade-in">
+      <div className="min-h-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 anim-fade-in">
         <div className="mx-auto max-w-5xl px-4 py-12">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur anim-fade-up">
             <p className="text-white/80">Loading your dashboard…</p>
@@ -344,7 +344,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 anim-fade-in">
+    <div className="min-h-full bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 anim-fade-in">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:py-10">
         {/* Top Bar */}
         <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm backdrop-blur sm:p-6 anim-fade-up">

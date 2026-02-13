@@ -346,7 +346,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-full py-8 sm:py-10">
+    <div className="min-h-full py-8 sm:py-10 overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* Top Bar */}
@@ -359,8 +359,8 @@ export default function Dashboard() {
             <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
               <span className="text-neon-blue">⚡</span> My Bookmarks
             </h1>
-            <p className="mt-1 text-sm text-white/60">
-              Welcome back, <span className="text-white font-medium">{user?.email}</span>
+            <p className="mt-1 text-sm text-white/60 break-words">
+              Welcome back, <span className="text-white font-medium break-all">{user?.email}</span>
             </p>
           </div>
 
@@ -372,7 +372,7 @@ export default function Dashboard() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full sm:w-64 bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-neon-blue/50 focus:ring-1 focus:ring-neon-blue/50 transition-all"
+                className="w-full sm:w-64 bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-base sm:text-sm text-white focus:outline-none focus:border-neon-blue/50 focus:ring-1 focus:ring-neon-blue/50 transition-all"
               />
             </div>
 
@@ -395,7 +395,7 @@ export default function Dashboard() {
             transition={{ delay: 0.1 }}
             className="lg:col-span-4"
           >
-            <div className="glass-panel rounded-2xl p-6 sticky top-8">
+            <div className="glass-panel rounded-2xl p-6 lg:sticky lg:top-8">
               <div className="flex items-center gap-2 mb-6 text-neon-purple">
                 <Plus size={20} />
                 <h2 className="font-semibold text-white">Add New Bookmark</h2>
@@ -489,7 +489,7 @@ export default function Dashboard() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.98 }}
                       transition={{ duration: 0.2 }}
-                      className="glass-card group rounded-xl p-4 flex items-center gap-4"
+                      className="glass-card group rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4"
                       style={{ willChange: "transform, opacity" }}
                     >
                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:border-neon-blue/30 transition-colors">
@@ -525,7 +525,7 @@ export default function Dashboard() {
                         </a>
                       </div>
 
-                      <div className="flex items-center gap-1 sm:gap-2">
+                      <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
                         <a
                           href={bookmark.url}
                           target="_blank"

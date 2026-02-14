@@ -3,11 +3,21 @@ import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, ExternalLink, Search, LogOut, LayoutGrid, List } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  ExternalLink,
+  Search,
+  LogOut,
+  LayoutGrid,
+  List,
+  Bookmark,
+} from "lucide-react";
 
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [avatarError, setAvatarError] = useState(false);
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
@@ -53,6 +63,55 @@ export default function Dashboard() {
 
     return () => subscription.unsubscribe();
   }, [router]);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [user?.id]);
+
+  const getDisplayName = (authUser) => {
+    const meta = authUser?.user_metadata || {};
+    const nameCandidate =
+      meta.full_name ||
+      meta.name ||
+      meta.user_name ||
+      meta.preferred_username ||
+      meta.nickname ||
+      authUser?.identities?.[0]?.identity_data?.full_name ||
+      authUser?.identities?.[0]?.identity_data?.name;
+
+    if (typeof nameCandidate === "string" && nameCandidate.trim()) {
+      return nameCandidate.trim();
+    }
+
+    const email = authUser?.email;
+    if (typeof email === "string" && email.includes("@")) {
+      return email.split("@")[0];
+    }
+
+    return "";
+  };
+
+  const getAvatarUrl = (authUser) => {
+    const meta = authUser?.user_metadata || {};
+    const candidate =
+      meta.avatar_url ||
+      meta.picture ||
+      meta.avatar ||
+      authUser?.identities?.[0]?.identity_data?.avatar_url ||
+      authUser?.identities?.[0]?.identity_data?.picture;
+    return typeof candidate === "string" && candidate.trim() ? candidate.trim() : "";
+  };
+
+  const getInitials = (value) => {
+    if (!value) return "U";
+    const parts = String(value)
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (parts.length === 0) return "U";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  };
 
   // Same-browser multi-tab sync (works even if Supabase Realtime isn't configured).
   useEffect(() => {
@@ -371,7 +430,50 @@ export default function Dashboard() {
               <span className="text-neon-blue">⚡</span> My Bookmarks
             </h1>
             <p className="mt-1 text-sm text-white/60 break-words">
-              Welcome back, <span className="text-white font-medium break-all">{user?.email}</span>
+              <span className="inline-flex items-center gap-2">
+                <span
+                  className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5 text-[10px] font-semibold text-white/80"
+                  aria-label="Profile"
+                  title={getDisplayName(user) || user?.email || "User"}
+                >
+                  {!avatarError && getAvatarUrl(user) ? (
+                    <img
+                      src={getAvatarUrl(user)}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <span aria-hidden="true">
+                      {getInitials(getDisplayName(user) || user?.email)}
+                    </span>
+                  )}
+                </span>
+
+                <span className="min-w-0">
+                  Welcome back,
+                  {getDisplayName(user) ? (
+                    <>
+                      {" "}
+                      <span className="text-white font-medium">{getDisplayName(user)}</span>
+                      {user?.email ? (
+                        <>
+                          {" "}
+                          <span className="text-white/70 break-all">({user.email})</span>
+                        </>
+                      ) : null}
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <span className="text-white font-medium break-all">{user?.email}</span>
+                    </>
+                  )}
+                </span>
+              </span>
             </p>
           </div>
 
@@ -504,15 +606,7 @@ export default function Dashboard() {
                       style={{ willChange: "transform, opacity" }}
                     >
                       <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:border-neon-blue/30 transition-colors">
-                        <img
-                          src={`https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}&sz=32`}
-                          onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block' }}
-                          alt=""
-                          className="w-5 h-5 opacity-80"
-                        />
-                        <span className="hidden text-xs font-bold text-white/40">
-                          {bookmark.title.charAt(0).toUpperCase()}
-                        </span>
+                        <Bookmark className="w-5 h-5 opacity-70 text-white" />
                       </div>
 
                       <div className="flex-1 min-w-0">
